@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2020-2021 Smart Robotics Lab, Imperial College London
+# SPDX-FileCopyrightText: 2020-2021 Sotiris Papatheodorou
+# SPDX-License-Identifier: CC0-1.0
+
+# Simple MAV simulator settings
+sim_freq: 60
+a_max: [1.0, 1.0, 0.5]
+w_max: [0.1, 0.1, 0.05]
+world_frame_id: "world" 
+base_frame_id: "base_link" 
+# robot_name: "robot1" 
+

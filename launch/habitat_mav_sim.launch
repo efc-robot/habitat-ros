@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!-- SPDX-FileCopyrightText: 2020-2021 Smart Robotics Lab, Imperial College London -->
+<!-- SPDX-FileCopyrightText: 2020-2021 Sotiris Papatheodorou -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+<launch>
+  <!-- Node arguments -->
+  <!-- <arg name="habitat_config" default="$(find habitat_ros)/config/habitat.yaml"/> -->
+  <arg name="habitat_mav_sim_config" default="$(find habitat_ros)/config/habitat_mav_sim.yaml"/>
+  <arg name="publish_path" default="true"/>
+  <arg name="robot_name" default="robot1"/>
+  
+  <!-- MAV simulator node -->
+  <!-- <remap from="/habitat_mav_sim1/pose" to="/robot1/external_pose"/> -->
+  <group ns="$(arg robot_name)">
+    <node pkg="habitat_ros"
+        type="habitat_mav_sim_node.py"
+        name="habitat_mav_sim"
+        clear_params="true"
+        output="screen">
+      <rosparam command="load" file="$(arg habitat_mav_sim_config)"/>
+      <param name="robot_name" value="$(arg robot_name)" />
+    </node>
+    
+
+    <!-- Habitat-Sim teleoperation node -->
+    <node pkg="habitat_ros"
+        type="teleop.py"
+        name="teleop"
+        clear_params="true"
+        output="screen">
+      <param name="publish_path" type="bool" value="$(arg publish_path)"/>
+      <param name="robot_name" value="$(arg robot_name)" />
+    </node>
+  </group>
+
+  <!-- <include file="$(find habitat_ros)/launch/habitat.launch" pass_all_args="true"/> -->
+</launch>
+

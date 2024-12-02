@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="habitat_mav_sim_config" default="$(find habitat_ros)/config/habitat_mav_sim.yaml"/>
+  <arg name="habitat_config" default="$(find habitat_ros)/config/habitat.yaml"/>
+  <arg name="publish_path" default="true"/>
+  <arg name="robot_name" default="robot1"/>
+  
+  <!-- habitat node -->
+  <include file="$(find habitat_ros)/launch/habitat.launch">
+    <arg name="habitat_config" value="$(arg habitat_config)"/>
+    <arg name="robot_name" value="$(arg robot_name)"/>
+  </include>
+
+  <!-- habitat_mav_sim node -->
+  <include file="$(find habitat_ros)/launch/habitat_mav_sim.launch">
+    <arg name="habitat_mav_sim_config" value="$(arg habitat_mav_sim_config)"/>
+    <arg name="publish_path" value="$(arg publish_path)"/>
+    <arg name="robot_name" value="$(arg robot_name)"/>
+  </include>
+
+  
+
+  <node pkg="rviz" type="rviz" name="rviz_1" args="-d $(find habitat_ros)/config/robot1.rviz"/>
+</launch>
