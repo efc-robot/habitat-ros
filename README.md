@@ -47,6 +47,7 @@ Get Replica Dataset from [here](https://github.com/facebookresearch/Replica-Data
 ```shell
   $ roslaunch habitat_ros single_robot_bringup.launch # single robot
   $ roslaunch habitat_ros dual_robot_bringup.launch # dual robots (in a new terminal) 
+  $ cd scripts/ && python3 capture.py --robot_name <your robot name> # capture rgd & semantic images to build your own dataset
 ```
 This launch file starts the `habitat_mav_sim_node` and `habitat_node`, you can modify the parameters in config/habitat(_mav_sim).yaml to load your own scene and change the settings.
 

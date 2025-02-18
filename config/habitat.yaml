@@ -10,7 +10,7 @@ near_plane: 0.1
 far_plane: 20.0
 f: 525.0
 fps: 30
-enable_semantics: false
+enable_semantics: true
 depth_noise: false
 allowed_classes: []
 
@@ -26,7 +26,7 @@ world_frame_id: "world"
 base_frame_id: "base_link"
 camera_frame_id: "camera_link"
 # Visualization settings
-visualize_semantics: false
+visualize_semantics: true
 
 # Recording settings
 recording_dir: ""

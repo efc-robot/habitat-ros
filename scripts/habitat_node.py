@@ -616,13 +616,36 @@ class HabitatROSNode:
         msg.header.frame_id = self.robot_name + "/" + self.camera_frame_id
         return msg
 
+    def _put_text_on_img(self, img:np.array, labels:np.array) -> np.array:
+        """Put text on the image."""
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        font_scale = 0.5
+        color = (255, 255, 255)
+        thickness = 1
+        unique_labels = np.unique(labels)
 
-
+        for label in unique_labels:
+            if label == 0: 
+                continue
+            label_mask = (labels == label).astype(np.uint8) * 255
+            contours, _ = cv2.findContours(label_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            for contour in contours:
+                M = cv2.moments(contour)
+                if M["m00"] != 0:
+                    cx = int(M["m10"] / M["m00"])
+                    cy = int(M["m01"] / M["m00"])
+                    
+                    cv2.putText(img, str(label), (cx, cy), font, font_scale, color, thickness)
+        return img
+    
     def _sem_instances_to_msg(self, observation: Observation) -> Image:
         """Convert the instance ID image from the observation to a ROS Image
         message."""
         # Habitat-Sim produces 16-bit per-pixel instance ID images.
-        msg = self._bridge.cv2_to_imgmsg(observation["sem_instances"].astype(np.uint16), "16UC1")
+        sem_instances = observation["sem_instances"]
+        sem_instances_img = sem_instances.astype(np.uint16)
+        # sem_instances_img = self._put_text_on_img(sem_instances_img, sem_instances)
+        msg = self._bridge.cv2_to_imgmsg(sem_instances_img, "16UC1")
         msg.header.stamp = observation["timestamp"]
         return msg
 
@@ -632,7 +655,10 @@ class HabitatROSNode:
         """Convert the class ID image from the observation to a ROS Image
         message."""
         # Habitat-Sim produces 8-bit per-pixel class ID images.
-        msg = self._bridge.cv2_to_imgmsg(observation["sem_classes"].astype(np.uint8), "8UC1")
+        sem_classes = observation["sem_classes"]
+        sem_classes_img = sem_classes.astype(np.uint8)
+        # sem_classes_img = self._put_text_on_img(sem_classes_img, sem_classes)
+        msg = self._bridge.cv2_to_imgmsg(sem_classes_img, "8UC1")
         msg.header.stamp = observation["timestamp"]
         return msg
 
@@ -804,4 +830,3 @@ if __name__ == "__main__":
         node = HabitatROSNode()
     except rospy.ROSInterruptException:
         pass
-
